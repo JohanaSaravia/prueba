@@ -28,7 +28,7 @@ public class SaleController {
             List<CreatedSaleDTO> listInventory = service.listComplete();
             return ResponseEntity.ok(mapper.writeValueAsString(listInventory));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class SaleController {
             CreatedSaleDTO createdSaleDTO = service.createSale(createSaleDTO);
             return ResponseEntity.ok(mapper.writeValueAsString(createdSaleDTO));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class SaleController {
             List<CreatedSaleDTO> listInventory = service.listSalesByDate(byDateSale);
             return ResponseEntity.ok(mapper.writeValueAsString(listInventory));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

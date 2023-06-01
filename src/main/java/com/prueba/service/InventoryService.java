@@ -17,7 +17,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class InventoryService {
     ObjectMapper objectMapper;
 
     public CreatedInventoryDTO createInventory(CreateInventoryDTO createInventoryDTO) throws JsonProcessingException {
-        ValidateParameterInventory(createInventoryDTO);
+        validateParameterInventory(createInventoryDTO);
         CreatedMedicineDTO medicine = medicineService.consultMedicine(createInventoryDTO.getIdMedicamento());
         if (medicine != null) {
             InventoryEntity entity = objectMapper.readValue(objectMapper.writeValueAsString(createInventoryDTO), InventoryEntity.class);
@@ -52,7 +51,7 @@ public class InventoryService {
         }
     }
 
-    public void ValidateParameterInventory(CreateInventoryDTO createdInventoryDTO) {
+    public void validateParameterInventory(CreateInventoryDTO createdInventoryDTO) {
         if (createdInventoryDTO == null ||
                 createdInventoryDTO.getIdMedicamento() == null || createdInventoryDTO.getIdMedicamento() == 0 ||
                 createdInventoryDTO.getCantidad() == null
@@ -80,7 +79,7 @@ public class InventoryService {
 
     public CreatedInventoryDTO consultInventory(Long id) throws JsonProcessingException {
         Optional<InventoryEntity> entity = inventoryRepo.findById(id.intValue());
-        if (entity == null) {
+        if (entity.isEmpty()) {
             return new CreatedInventoryDTO();
         }
         CreatedMedicineDTO medicineDTO = medicineService.consultMedicine(entity.get().getIdMedicamento());
@@ -103,7 +102,7 @@ public class InventoryService {
             delete.setMensaje("Se ha eliminado correctamente el inventario");
             return delete;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -124,7 +123,7 @@ public class InventoryService {
     public CreatedInventoryDTO updateInventory(UpdateInventoryDTO update) throws JsonProcessingException {
         CreatedInventoryDTO createdInventoryDTO = consultInventory(update.getIdInventario());
         if (createdInventoryDTO==null) {
-            throw new RuntimeException("No existe inventario para actualizar");
+            throw new IllegalArgumentException("No existe inventario para actualizar");
         }
         try {
             InventoryEntity entityUpdate = objectMapper.readValue(objectMapper.writeValueAsString(createdInventoryDTO), InventoryEntity.class);
@@ -136,7 +135,7 @@ public class InventoryService {
             return createdInventoryDTO;
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

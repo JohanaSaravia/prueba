@@ -68,7 +68,7 @@ public class MedicineService {
             delete.setMensaje("Se ha eliminado correctamente el medicamento");
             return delete;
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

@@ -20,12 +20,10 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
 
 @Service
 public class SaleService {
@@ -53,7 +51,7 @@ public class SaleService {
             try{
                 CreatedInventoryDTO inventoryDTO = inventoryService.consultMedicine(e.getIdMedicamento());
                 if(inventoryDTO==null || e.getCantidad()>inventoryDTO.getCantidad()){
-                   throw new RuntimeException();
+                   throw new IllegalArgumentException("No se puede realizar la compra revise el inventario");
                 }
                 int cantidad = inventoryDTO.getCantidad()-e.getCantidad();
                 inventoryDTO.setCantidad(e.getCantidad());
@@ -63,7 +61,7 @@ public class SaleService {
                 valorFinal = valorFinal + (saleDetail.getValorUnitario()*saleDetail.getCantidad());
             }catch(Exception ex){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                throw new RuntimeException(ex.getMessage());
+                throw new IllegalArgumentException(ex.getMessage());
             }
         }
         saleEntity.setValorTotal(valorFinal);
@@ -86,7 +84,7 @@ public class SaleService {
             entity = saleDetailRepo.save(entity);
             return objectMapper.readValue(objectMapper.writeValueAsString(entity), SaleDetailCompleteDTO.class);
         }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

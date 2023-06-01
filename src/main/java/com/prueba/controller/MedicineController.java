@@ -28,7 +28,7 @@ public class MedicineController {
             CreatedMedicineDTO medicine = medicineService.createMedicine(creacionMedicamento);
             return ResponseEntity.ok(mapper.writeValueAsString(medicine));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class MedicineController {
             CreatedMedicineDTO medicine = medicineService.consultMedicine(id);
             return ResponseEntity.ok(mapper.writeValueAsString(medicine));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class MedicineController {
             DeletedMedicineDTO medicine = medicineService.deleteMedicine(id);
             return ResponseEntity.ok(mapper.writeValueAsString(medicine));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class MedicineController {
             List<CreatedMedicineDTO> medicine = medicineService.listMedicine();
             return ResponseEntity.ok(mapper.writeValueAsString(medicine));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class MedicineController {
             CreatedMedicineDTO medicineDTO = medicineService.updateMedicine(updateMedicineDTO);
             return ResponseEntity.ok(mapper.writeValueAsString(medicineDTO));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 }

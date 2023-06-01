@@ -5,7 +5,6 @@ import com.prueba.model.dto.in.CreateInventoryDTO;
 import com.prueba.model.dto.in.UpdateInventoryDTO;
 import com.prueba.model.dto.out.CreatedInventoryDTO;
 import com.prueba.model.dto.out.DeleteInventoryDTO;
-import com.prueba.model.dto.out.DeletedMedicineDTO;
 import com.prueba.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class InventoryController {
             CreatedInventoryDTO createdInventoryDTO = inventoryService.createInventory(createInventoryDTO);
             return ResponseEntity.ok(mapper.writeValueAsString(createdInventoryDTO));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -41,7 +40,7 @@ public class InventoryController {
             CreatedInventoryDTO medicine = inventoryService.consultMedicine(id);
             return ResponseEntity.ok(mapper.writeValueAsString(medicine));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -51,7 +50,7 @@ public class InventoryController {
             CreatedInventoryDTO medicine = inventoryService.consultInventory(id);
             return ResponseEntity.ok(mapper.writeValueAsString(medicine));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -61,7 +60,7 @@ public class InventoryController {
             DeleteInventoryDTO inventoryDTO = inventoryService.deleteInventory(id);
             return ResponseEntity.ok(mapper.writeValueAsString(inventoryDTO));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @GetMapping("/listarInventario")
@@ -70,7 +69,7 @@ public class InventoryController {
             List<CreatedInventoryDTO> listInventory = inventoryService.listComplete();
             return ResponseEntity.ok(mapper.writeValueAsString(listInventory));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body( e.getMessage());
         }
     }
 
@@ -80,7 +79,7 @@ public class InventoryController {
             CreatedInventoryDTO createdInventoryDTO = inventoryService.updateInventory(updateInventoryDTO);
             return ResponseEntity.ok(mapper.writeValueAsString(createdInventoryDTO));
         }catch(Exception e){
-            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
