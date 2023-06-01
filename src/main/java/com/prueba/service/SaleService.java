@@ -3,6 +3,7 @@ package com.prueba.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.model.dto.in.CreateSaleDTO;
+import com.prueba.model.dto.in.ListByDateSale;
 import com.prueba.model.dto.in.SaleDetailDTO;
 import com.prueba.model.dto.in.UpdateInventoryDTO;
 import com.prueba.model.dto.out.CreatedInventoryDTO;
@@ -40,7 +41,7 @@ public class SaleService {
             return new CreatedSaleDTO();
         }
         SaleEntity saleEntity = saleRepo.save(new SaleEntity());
-        Double valorFinal = null;
+        double valorFinal = 0;
         List<SaleDetailCompleteDTO> salesDetailList=new ArrayList<>();
         for(SaleDetailDTO e : createSaleDTO.getDetalleVenta()){
             try{
@@ -53,12 +54,14 @@ public class SaleService {
                 SaleDetailCompleteDTO saleDetail = createSaleDetail(inventoryDTO,saleEntity);
                 inventoryService.updateInventory(new UpdateInventoryDTO(inventoryDTO.getIdInventario(), cantidad));
                 salesDetailList.add(saleDetail);
-                valorFinal += saleDetail.getValorUnitario()*saleDetail.getCantidad();
+                valorFinal = valorFinal + (saleDetail.getValorUnitario()*saleDetail.getCantidad());
             }catch(Exception ex){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 throw new RuntimeException(ex.getMessage());
             }
         }
+        saleEntity.setValorTotal(valorFinal);
+        saleEntity= saleRepo.save(saleEntity);
         return convertEntityToBean(saleEntity,salesDetailList,valorFinal);
     }
 
@@ -81,4 +84,35 @@ public class SaleService {
         }
     }
 
+    public List<CreatedSaleDTO> listComplete() throws JsonProcessingException {
+        List<SaleEntity> saleEntityList = saleRepo.findAll();
+        List<CreatedSaleDTO> createdSaleDTOList = new ArrayList<>();
+        for(SaleEntity entity : saleEntityList){
+            CreatedSaleDTO completeDTO= objectMapper.readValue(objectMapper.writeValueAsString(entity), CreatedSaleDTO.class);
+            completeDTO.setListaDetalleVenta(consultSaleDetail(entity.getIdVenta()));
+            createdSaleDTOList.add(completeDTO);
+        }
+        return createdSaleDTOList;
+    }
+
+    public List<SaleDetailCompleteDTO> consultSaleDetail(Long id) throws JsonProcessingException {
+        List<SaleDetailEntity> entityList = saleDetailRepo.consultSaleDetailXSale(id);
+        List<SaleDetailCompleteDTO> detailCompleteDTOS = new ArrayList<>();
+       for(SaleDetailEntity entity:entityList){
+           SaleDetailCompleteDTO completeDTO= objectMapper.readValue(objectMapper.writeValueAsString(entity), SaleDetailCompleteDTO.class);
+           detailCompleteDTOS.add(completeDTO);
+       }
+       return detailCompleteDTOS;
+    }
+
+    public List<CreatedSaleDTO> listSalesByDate(ListByDateSale listByDateSale) throws JsonProcessingException {
+        List<SaleEntity> saleEntityList = saleRepo.listSales(listByDateSale.getFechaInicio(),listByDateSale.getFechaFin());
+        List<CreatedSaleDTO> createdSaleDTOList = new ArrayList<>();
+        for(SaleEntity entity : saleEntityList){
+            CreatedSaleDTO completeDTO= objectMapper.readValue(objectMapper.writeValueAsString(entity), CreatedSaleDTO.class);
+            completeDTO.setListaDetalleVenta(consultSaleDetail(entity.getIdVenta()));
+            createdSaleDTOList.add(completeDTO);
+        }
+        return createdSaleDTOList;
+    }
 }

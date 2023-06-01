@@ -83,7 +83,7 @@ public class MedicineService {
     }
 
     public CreatedMedicineDTO updateMedicine(UpdateMedicineDTO medicineDTO) throws JsonProcessingException {
-        Optional<MedicineEntity> entity = medicineRepo.findById(medicineDTO.getIdMedicine().intValue());
+        Optional<MedicineEntity> entity = medicineRepo.findById(medicineDTO.getIdMedicamento().intValue());
         if(entity.isEmpty()){
             throw new IllegalArgumentException("No es posible actualizar no existe medicamento");
         }

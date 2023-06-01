@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.model.dto.in.CreateInventoryDTO;
 import com.prueba.model.dto.in.UpdateInventoryDTO;
 import com.prueba.model.dto.out.CreatedInventoryDTO;
+import com.prueba.model.dto.out.DeleteInventoryDTO;
+import com.prueba.model.dto.out.DeletedMedicineDTO;
 import com.prueba.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,15 @@ public class InventoryController {
         }
     }
 
+    @DeleteMapping("/eliminarInventario/{idInventario}")
+    public ResponseEntity<String> deleteInventory(@PathVariable("idInventario") Long id){
+        try{
+            DeleteInventoryDTO inventoryDTO = inventoryService.deleteInventory(id);
+            return ResponseEntity.ok(mapper.writeValueAsString(inventoryDTO));
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body("ERROR "+ e.getMessage());
+        }
+    }
     @GetMapping("/listarInventario")
     public ResponseEntity<String> listInventory(){
         try{

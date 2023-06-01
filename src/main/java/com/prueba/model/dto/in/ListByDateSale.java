@@ -3,10 +3,12 @@ package com.prueba.model.dto.in;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
-public class UpdateMedicineDTO {
+public class ListByDateSale {
 
-    private Long idMedicamento;
-    private Double valorUnitario;
+    Date fechaInicio;
+    Date fechaFin;
 }
