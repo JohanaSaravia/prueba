@@ -11,7 +11,7 @@ public class CreateMedicineDTO {
 
     String nombre;
     String laboratorioFabrica;
-    Date fechaFabricacion;
-    Date fechaVencimiento;
+    String fechaFabricacion;
+    String fechaVencimiento;
     Double valorUnitario;
 }

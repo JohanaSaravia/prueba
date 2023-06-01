@@ -2,7 +2,6 @@ package com.prueba.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -27,11 +26,9 @@ public class MedicineEntity {
     @Column(name="laboratorio_fabrica")
     private String laboratorioFabrica;
 
-    @CreationTimestamp
     @Column(name = "fecha_fabricacion")
     private Timestamp fechaFabricacion;
 
-    @CreationTimestamp
     @Column(name="fecha_vencimiento")
     private Timestamp fechaVencimiento;
 

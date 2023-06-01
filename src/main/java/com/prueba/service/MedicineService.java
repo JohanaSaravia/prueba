@@ -12,7 +12,11 @@ import com.prueba.repository.MedicineRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +31,12 @@ public class MedicineService {
 
     @Autowired
     private ObjectMapper objectMapper;
-    public CreatedMedicineDTO createMedicine(CreateMedicineDTO createMedicineDTO) throws JsonProcessingException {
+    public CreatedMedicineDTO createMedicine(CreateMedicineDTO createMedicineDTO) throws JsonProcessingException, ParseException {
         validateParamsMedicine(createMedicineDTO);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         MedicineEntity medicineEntity = objectMapper.readValue(objectMapper.writeValueAsString(createMedicineDTO),MedicineEntity.class);
+        medicineEntity.setFechaFabricacion(new Timestamp(formatter.parse(createMedicineDTO.getFechaFabricacion()).getTime()));
+        medicineEntity.setFechaVencimiento( new Timestamp(formatter.parse(createMedicineDTO.getFechaVencimiento()).getTime()));
         MedicineEntity medicineCreated = medicineRepo.save(medicineEntity);
        return objectMapper.readValue(objectMapper.writeValueAsString(medicineCreated), CreatedMedicineDTO.class);
     }
@@ -37,9 +44,9 @@ public class MedicineService {
     public void validateParamsMedicine(CreateMedicineDTO medicineDTO){
         if(medicineDTO==null||medicineDTO.getNombre()==null || medicineDTO.getNombre().trim().isEmpty()||
             medicineDTO.getLaboratorioFabrica()==null || medicineDTO.getLaboratorioFabrica().trim().isEmpty()||
-                medicineDTO.getFechaFabricacion()==null ||
-                medicineDTO.getFechaVencimiento()==null ||
-                medicineDTO.getValorUnitario()==null || medicineDTO.getValorUnitario()==0
+                medicineDTO.getFechaFabricacion()==null ||medicineDTO.getFechaFabricacion().trim().isEmpty()||
+                medicineDTO.getFechaVencimiento()==null || medicineDTO.getFechaVencimiento().trim().isEmpty()||
+        medicineDTO.getValorUnitario()==null || medicineDTO.getValorUnitario()==0
         ){
             throw new IllegalArgumentException("The parameters aren't complete");
         }
