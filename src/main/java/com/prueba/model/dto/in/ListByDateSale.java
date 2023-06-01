@@ -9,6 +9,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class ListByDateSale {
 
-    Date fechaInicio;
-    Date fechaFin;
+    String fechaInicio;
+    String fechaFin;
 }

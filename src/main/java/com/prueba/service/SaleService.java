@@ -18,8 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class SaleService {
@@ -105,8 +111,11 @@ public class SaleService {
        return detailCompleteDTOS;
     }
 
-    public List<CreatedSaleDTO> listSalesByDate(ListByDateSale listByDateSale) throws JsonProcessingException {
-        List<SaleEntity> saleEntityList = saleRepo.listSales(listByDateSale.getFechaInicio(),listByDateSale.getFechaFin());
+    public List<CreatedSaleDTO> listSalesByDate(ListByDateSale listByDateSale) throws JsonProcessingException, ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dateInit = formatter.parse(listByDateSale.getFechaInicio());
+        Date dateEnd = formatter.parse(listByDateSale.getFechaFin());
+        List<SaleEntity> saleEntityList = saleRepo.listSales(dateInit,dateEnd);
         List<CreatedSaleDTO> createdSaleDTOList = new ArrayList<>();
         for(SaleEntity entity : saleEntityList){
             CreatedSaleDTO completeDTO= objectMapper.readValue(objectMapper.writeValueAsString(entity), CreatedSaleDTO.class);
